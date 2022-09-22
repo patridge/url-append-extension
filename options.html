@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Copy Page URL Options</title>
+  <title>Microsoft Learn URL Appender Options</title>
   <style type="text/css">
     input[type="radio"] {
       vertical-align: middle;
@@ -22,10 +22,14 @@
       height: 32px;
       vertical-align: middle;
     }
+
+    body {
+      overflow: hidden; /* Hide scrollbars */
+    }
   </style>
 </head>
 <body>
-<div>
+<!----<div>
   Choose the toolbar icon: <br>
   <label class="option toolbar_icon" for="toolbar_icon:black">
     <input type="radio" name="toolbar_icon" id="toolbar_icon:black">
@@ -37,12 +41,24 @@
     <img src="copy_gray_128.png" class="icon">
   </label>
 </div>
+----->
+<div>
+  <label for="trackingParam">
+  Tracking parameter to append<br>
+  <input type="text" name="trackingParam" id="trackingParam">
+  </label>
+</div>
+<br>
+
+<!---TODO: We may not need this. Decide if it should be optional or hard-coded.-->
 <div>
   <label class="option clean_url">
     <input type="checkbox" name="clean_url" id="clean_url" value="1">
-    Remove marketing tags from URLs
+    Remove original tracking tags from URLs
   </label>
 </div>
+<br>
+
 <script type="module" src="options.js"></script>
 </body>
 </html>
