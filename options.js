@@ -1,3 +1,5 @@
+import { defaults } from './defaults.js';
+
 function saveAndApply(params) {
   chrome.storage.sync.set(params, function () {
     chrome.runtime.sendMessage({

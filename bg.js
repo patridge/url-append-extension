@@ -1,32 +1,30 @@
+import { defaults } from './defaults.js';
+
 var options;
 var timeout;
 
-var elem = document.createElement('input');
-document.body.appendChild(elem);
-
 function copy(text) {
+  // TODO: This system doesn't work yet.
+  //       The old `document.execCommand` system doesn't work because we don't have a `document` object. And while it's the newer API, the new `navigator.clipboard` API doesn't work here for security reasons to prevent clipboard manipulation outside of a user interacting with a page.
+  var textToCopy = text;
   if (options.clean_url) {
-    elem.value = cleanURL(text);
+    textToCopy = cleanURL(text);
     //Debugging = console.log('Used CleanURL');
-  } else {
-    elem.value = text;
-    //Debugging = console.log('Did not use CleanURL');
   }
   //Change for value you want appended.
   //Update to take input(s).
-  elem.value += '?wt.mc_id=CatalogApi';
-  elem.select();
-  document.execCommand('Copy', false, null);
+  textToCopy += '?wt.mc_id=CatalogApi';
+  navigator.clipboard.writeText(textToCopy);
 }
 
 function setIcon(icon) {
-  chrome.browserAction.setIcon({
+  chrome.action.setIcon({
     path: 'copy_' + icon + '_128.png'
   });
 }
 
 function setBadgeText(text) {
-  chrome.browserAction.setBadgeText({
+  chrome.action.setBadgeText({
     text: text
   });
 }
@@ -36,8 +34,7 @@ function setBadgeText(text) {
 //}
 
 function cleanURL(url) {
-  var a = document.createElement('a');
-  a.href = url;
+  var a = new URL(url);
   //Original search line = a.search = removeTrackingTags(a.search.replace(/^\?/,''));
   a.search = removeTrackingTags(a.search.replace(/^\?(.*)/,''));
   //Debugging = console.log('a.search = ' + a.search);
@@ -47,6 +44,7 @@ function cleanURL(url) {
 }
 
 function removeTrackingTags(str) {
+  var debug;
   return str
     .split('&')
     .filter(function(item) {
@@ -82,7 +80,7 @@ chrome.runtime.onInstalled.addListener(function() {
     ]
   });
 
-  chrome.browserAction.setBadgeBackgroundColor({
+  chrome.action.setBadgeBackgroundColor({
     color: '#32cd32'
   });
 });
@@ -95,7 +93,7 @@ chrome.contextMenus.onClicked.addListener(function(info) {
   }
 });
 
-chrome.browserAction.onClicked.addListener(function(tab) {
+chrome.action.onClicked.addListener(function(tab) {
   copy(tab.url);
   setBadgeText('OK!');
   clearTimeout(timeout);
